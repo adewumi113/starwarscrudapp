@@ -1,0 +1,61 @@
+In Express, we handle a GET request with the get method:
+
+app.get(endpoint, callback)
+
+
+Nodemon
+Nodemon restarts the server automatically when you save a file that’s used by the server.js. We can install Nodemon with the following command:
+
+$ npm install nodemon --save-dev
+We use a --save-dev flag here because we only use Nodemon when we are developing stuff. We won’t use Nodemon on an actual server. --save-dev here adds Nodemon as a devDependency in the package.json file.
+
+I normally use Mongoose (which is a framework for MongoDB) when I use MongoDB. I’ll teach you how to use basic MongoDB in this article. If you want to learn Mongoose, consider reading my article on Mongoose in the link below.
+https://zellwk.com/blog/mongoose
+
+MongoDB Atlas
+https://www.mongodb.com/cloud/atlas
+
+templates engine
+I’ve wrote extensively about the how and why of template engines in a separate post. You might want to check it out if you have no idea what template engines are.
+I use Nunjucks as my template engine of choice. Feel free to check out the post to find out why.
+https://zellwk.com/blog/nunjucks-with-gulp/
+
+
+
+Sending a PUT Request
+The easiest way to trigger a PUT request in modern browsers is to use the Fetch API.
+Fetch has the following syntax:
+fetch(endpoint, options)
+
+
+Changing Yoda’s quote
+MongoDB Collections come with a method called findOneAndUpdate. This method lets us find and change one item in the database. It has the following syntax:
+quotesCollection
+  .findOneAndUpdate(query, update, options)
+  .then(result => {
+    /* ... */
+  })
+  .catch(error => console.error(error))
+
+
+query lets us filter the collection with key-value pairs. If we want to filter quotes to those written by Yoda, we can set { name: 'Yoda' } as the query.
+
+update, tells MongoDB what to change. It uses MongoDB’s update operators like $set, $inc and $push.
+
+We will use the $set operator since we’re changing Yoda’s quotes into Darth Vader’s quotes:
+
+quotesCollection
+  .findOneAndUpdate(
+    { name: 'Yoda' },
+    {
+      $set: {
+        name: req.body.name,
+        quote: req.body.quote,
+      },
+    },
+
+
+
+options tells MongoDB to define additional options for this update request.
+
+In this case, it’s possible that no Yoda quotes exist in the database. We can force MongoDB to create a new Darth Vader quote if no Yoda quotes exist. We do this by setting upsert to true. upsert means: Insert a document if no documents can be updated.
